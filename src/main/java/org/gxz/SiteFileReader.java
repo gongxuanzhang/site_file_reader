@@ -111,11 +111,11 @@ public class SiteFileReader implements Iterable<WaveformData> {
 
         private final WaveformDataDecoder decoder = new WaveformDataDecoder();
 
-        private byte[] readBytes = new byte[capacity];
+        private final byte[] readBytes = new byte[capacity];
 
-        private ByteBuffer buffer = ByteBuffer.wrap(readBytes);
+        private final ByteBuffer buffer = ByteBuffer.wrap(readBytes);
 
-        FileInputStream fileInputStream = new FileInputStream(siteFile);
+        private final FileInputStream fileInputStream = new FileInputStream(siteFile);
 
         private boolean completed;
 
@@ -129,7 +129,7 @@ public class SiteFileReader implements Iterable<WaveformData> {
         }
 
         /**
-         * 如果读出了数据，返回true，否则返回false 
+         * 如果读出了数据，返回true，否则返回false
          **/
         private boolean doRead() {
             if (completed) {
@@ -141,8 +141,9 @@ public class SiteFileReader implements Iterable<WaveformData> {
                 int readLength = fileInputStream.read(readBytes, buffer.remaining(), expectLength);
                 if (readLength != expectLength) {
                     completed = true;
+                    fileInputStream.close();
                 }
-                if(readLength == -1){
+                if (readLength == -1) {
                     return false;
                 }
                 buffer.position(buffer.remaining() + readLength);
